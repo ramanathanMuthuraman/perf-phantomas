@@ -1,0 +1,40 @@
+{
+  "name": "perf-phantomas",
+  "version": "1.0.0",
+  "description": "Perfomance tool for finding webpage metrics",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ramanathanMuthuraman/perf-phantomas"
+  },
+  "keywords": [
+    "Perfomance",
+    "Phantomas",
+    "d3",
+    "chart"
+  ],
+  "author": "Ramanathan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ramanathanMuthuraman/perf-phantomas/issues"
+  },
+  "homepage": "https://github.com/ramanathanMuthuraman/perf-phantomas",
+  "devDependencies": {
+    "async": "^1.4.2",
+    "bower": "^1.4.1",
+    "browser-sync": "^2.8.2",
+    "del": "1.1.1",
+    "gulp": "^3.9.0",
+    "gulp-connect": "^2.2.0",
+    "gulp-open": "^1.0.0",
+    "ngrok": "0.1.99",
+    "phantomas": "^1.11.0",
+    "psi": "^1.0.6",
+    "simplehar": "^0.19.0",
+    "tableify": "0.0.10",
+    "yslowjs": "^0.3.2"
+  }
+}

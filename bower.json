@@ -1,0 +1,26 @@
+{
+  "name": "perf-phantomas",
+  "version": "1.0.0",
+  "homepage": "https://github.com/ramanathanMuthuraman/perf-phantomas",
+  "authors": [
+    "ramanathan"
+  ],
+  "description": "Perfomance tool for finding webpage metrics",
+  "keywords": [
+    "perfomance",
+    "phantomas",
+    "d3",
+    "charts"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "d3": "~3.5.6"
+  }
+}
