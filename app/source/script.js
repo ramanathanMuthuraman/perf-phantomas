@@ -13,7 +13,7 @@ function generateChart(fileType, chart) {
     .append("svg")
     .attr("width", width)
     .attr("height", height)
-    .attr("class", "pie-chart")
+    .attr("class", "pie-chart left")
     .append("g")
     .attr("transform", "translate(" + radius + "," + radius + ")");
 
@@ -107,17 +107,30 @@ function generateScreenshot(filename,el){
 
     d3.select(el)
     .append("h1")
-    .attr("class", "title")
+    .attr("class", "title center")
     .html(filename);
   d3.select(el)
     .append("img")
     .attr("src", filename + ".jpg")
-    .attr("class", "screenshot");
+    .attr("class", "screenshot clear");
 
 }
 function generateStats(stats, el) {
 
-
+  var html = "";
+  for (var j = 0; j < stats.length; j++) {
+    var filepath = stats[j].info[0].split(" ")[0];
+    var filename = filepath.substr((filepath).lastIndexOf("/")+1);
+    if(!filename.length){
+      filename = "index.html";
+    }
+    html+="<div class='metrics'>";
+    html+="<p class='title center'>"+stats[j].title+"</p>";
+    html+="<p class='center'><span>"+filename+"</span>";
+    html+="<span> in "+stats[j].time+" ms </span></p>";    
+    html+="</div>";
+  }
+  d3.select(el).append("div").attr("class","dashboard left").html(html);
 
 
 
@@ -128,26 +141,28 @@ function generateTable(fileType, el) {
 
   var html = "";
   var total = 0;
-  html += "<tr class='header'>";
+/*  html += "<tr class='header'>";
   html += "<td>File Type</td>";
   html += "<td>Size(MB)</td>";
-  html += "</tr>";
+  html += "</tr>";*/
+  html += "<div class='time-stats left'>";
   for (var j = 0; j < fileType.length; j++) {
     var convertToMB = (fileType[j].size / 1000000)
       .toFixed(2);
     total += parseFloat(convertToMB);
-    html += "<tr data-filetype=" + fileType[j].title.toLowerCase() + " class='fileType'>";
-    html += "<td>" + fileType[j].title + "</td>";
-    html += "<td>" + convertToMB + "</td>";
-    html += "</tr>";
+    html += "<p data-filetype=" + fileType[j].title.toLowerCase() + " class='fileType metrics'>";
+    html += "<p class='filename left'>" + fileType[j].title + "</p>";
+    html += "<p class='filesize right'>" + convertToMB + "</p>";
+    html += "</p>";
   }
-  html += "<tr class='footer'>";
-  html += "<td>Total</td>";
-  html += "<td>" + total.toFixed(2) + "</td>";
-  html += "</tr>";
+  html += "<p class='footer metrics'>";
+  html += "<span>Total</span>";
+  html += "<span>" + total.toFixed(2) + "</span>";
+  html += "</p>";
+  html += "</div>";
   var table = d3.select(el)
-    .append("table")
-    .attr("class", "stats-table")
+    .append("div")
+    .attr("class", "stats")
     .html(html);
 
   table.selectAll(".filetype")
@@ -187,7 +202,7 @@ d3.json("perfomanceData.json", function(error, pages) {
       var resourcePanel = d3.select(page).append("div")
       .attr("class","section");
     generateScreenshot(pages[i].title, stats[0][0]);
-    generateStats(pages[i], stats[0][0]);
+    generateStats(pages[i].stats, stats[0][0]);
     generateTable(pages[i].fileType, chart[0][0]);
     generateChart(pages[i].fileType, chart[0][0]);
     generateResourceTiming(pages[i].title, resourcePanel[0][0]);
@@ -204,7 +219,7 @@ function generateNavigation(){
       .attr("class", "nav");
   var nav = d3.select(".nav")
   nav.append("div").attr("class","prev")
-  nav.append("div").attr("class","current").html("0")
+  nav.append("div").attr("class","current center").html("0")
   nav.append("div").attr("class","next");
 
 }

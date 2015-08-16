@@ -48,18 +48,40 @@
 	display: block;
 }
 .screenshot{
-	width: 50%;
-	display: block;
-	margin: 0 auto;
+	width: 70%;
+
+}
+.left{
+	float:left;
+}
+.right{
+	float:right;
+}
+.clear{
+	clear: both;
+}
+.center{
+	text-align: center;
 }
 .title{
-	text-align: center;
+	font-weight: bold;
 }
 .stats-table{
     float: left;
     border-collapse:collapse;
 }
-
+.metrics{
+	width:40%;
+	background: #ccc;
+	margin: 10px 20px;
+	padding: 10px 20px;
+}
+.dashboard{
+	width: 30%;
+}
+.time-stats{
+	width: 40%;
+}
 .stats-table tr{
 
 	border-bottom-width:5px;
@@ -85,6 +107,12 @@
 	font-weight: bold;
 }
 
+.text-left{
+	text-align: left;
+}
+.text-right{
+	text-align: right;
+}
 .stats-table tr.css{
 	border-bottom-width: 5px;
 	border-bottom-color:#1F77B4;
@@ -137,7 +165,6 @@ margin-bottom: 80px;
 }
 .current{
 	position: relative;
-    text-align: center;
     font-size: 18px;
 }
 

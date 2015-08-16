@@ -79,36 +79,36 @@ gulp.task("phantomas", function() {
 			metrics.push({
 				"title": page.title,
 				"stats" : [{
-					"title":"css",
-					"time":json.timeToFirstCss,
+					"title":"Time To First CSS",
+					"time":json.metrics.timeToFirstCss,
 					"info":json.offenders.timeToFirstCss
 				},{
-					"title":"JS",
-					"time":json.timeToFirstJs,
+					"title":"Time To First JS",
+					"time":json.metrics.timeToFirstJs,
 					"info":json.offenders.timeToFirstJs
 				},{
-					"title":"smallestResponse",
-					"time":json.smallestResponse,
+					"title":"Smallest Response",
+					"time":json.metrics.smallestResponse,
 					"info":json.offenders.smallestResponse
 				},{
-					"title":"biggestResponse",
-					"time":json.biggestResponse,
+					"title":"Biggest Response",
+					"time":json.metrics.biggestResponse,
 					"info":json.offenders.biggestResponse
 				},{
-					"title":"fastestResponse",
-					"time":json.fastestResponse,
+					"title":"Fastest Response",
+					"time":json.metrics.fastestResponse,
 					"info":json.offenders.fastestResponse
 				},{
-					"title":"slowestResponse",
-					"time":json.slowestResponse,
+					"title":"Slowest Response",
+					"time":json.metrics.slowestResponse,
 					"info":json.offenders.slowestResponse
 				},{
-					"title":"smallestLatency",
-					"time":json.smallestLatency,
+					"title":"Smallest Latency",
+					"time":json.metrics.smallestLatency,
 					"info":json.offenders.smallestLatency
 				},{
-					"title":"biggestLatency",
-					"time":json.biggestLatency,
+					"title":"Biggest Latency",
+					"time":json.metrics.biggestLatency,
 					"info":json.offenders.biggestLatency
 				}],
 				"fileType": [{
