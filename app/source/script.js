@@ -103,23 +103,27 @@ function generateChart(fileType, chart) {
       return d;
     });
 }
+function generateScreenshot(filename,el){
 
-function generateHeader(info, header) {
-
-
-
-  d3.select(header)
+    d3.select(el)
     .append("h1")
     .attr("class", "title")
-    .html(info.title);
-  d3.select(header)
+    .html(filename);
+  d3.select(el)
     .append("img")
-    .attr("src", info.title + ".jpg")
+    .attr("src", filename + ".jpg")
     .attr("class", "screenshot");
 
 }
+function generateStats(stats, el) {
 
-function generateTable(fileType, chart) {
+
+
+
+
+}
+
+function generateTable(fileType, el) {
 
 
   var html = "";
@@ -141,7 +145,7 @@ function generateTable(fileType, chart) {
   html += "<td>Total</td>";
   html += "<td>" + total.toFixed(2) + "</td>";
   html += "</tr>";
-  var table = d3.select(chart)
+  var table = d3.select(el)
     .append("table")
     .attr("class", "stats-table")
     .html(html);
@@ -156,12 +160,12 @@ function generateTable(fileType, chart) {
   });;
 }
 
-function generateResourceTiming(title, resourcePanel) {
+function generateResourceTiming(filename, el) {
 
-  d3.select(resourcePanel)
+  d3.select(el)
     .append("iframe")
     .attr("class", "resourceTiming")
-    .attr("src", title + ".html");
+    .attr("src", filename + ".html");
 
 }
 
@@ -176,13 +180,14 @@ d3.json("perfomanceData.json", function(error, pages) {
       .append("div")
       .attr("class", "page");
     var page = d3.selectAll(".page")[0][i];
-      var header = d3.select(page).append("div")
+      var stats = d3.select(page).append("div")
       .attr("class","section");
       var chart =  d3.select(page).append("div")
       .attr("class","section");
       var resourcePanel = d3.select(page).append("div")
       .attr("class","section");
-    generateHeader(pages[i], header[0][0]);
+    generateScreenshot(pages[i].title, stats[0][0]);
+    generateStats(pages[i], stats[0][0]);
     generateTable(pages[i].fileType, chart[0][0]);
     generateChart(pages[i].fileType, chart[0][0]);
     generateResourceTiming(pages[i].title, resourcePanel[0][0]);

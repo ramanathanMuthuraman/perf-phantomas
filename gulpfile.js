@@ -70,6 +70,7 @@ gulp.task("phantomas", function() {
 			//"proxy":proxy,
 			"reporter": config.reporter
 		}, function(err, json) {
+			fs.writeFileSync(perfomanceResults+"test.json", JSON.stringify(json));
 			simplehar({
 				har: perfomanceResults + page.title + ".har",
 				html: perfomanceResults + page.title + ".html"
@@ -77,6 +78,39 @@ gulp.task("phantomas", function() {
 
 			metrics.push({
 				"title": page.title,
+				"stats" : [{
+					"title":"css",
+					"time":json.timeToFirstCss,
+					"info":json.offenders.timeToFirstCss
+				},{
+					"title":"JS",
+					"time":json.timeToFirstJs,
+					"info":json.offenders.timeToFirstJs
+				},{
+					"title":"smallestResponse",
+					"time":json.smallestResponse,
+					"info":json.offenders.smallestResponse
+				},{
+					"title":"biggestResponse",
+					"time":json.biggestResponse,
+					"info":json.offenders.biggestResponse
+				},{
+					"title":"fastestResponse",
+					"time":json.fastestResponse,
+					"info":json.offenders.fastestResponse
+				},{
+					"title":"slowestResponse",
+					"time":json.slowestResponse,
+					"info":json.offenders.slowestResponse
+				},{
+					"title":"smallestLatency",
+					"time":json.smallestLatency,
+					"info":json.offenders.smallestLatency
+				},{
+					"title":"biggestLatency",
+					"time":json.biggestLatency,
+					"info":json.offenders.biggestLatency
+				}],
 				"fileType": [{
 					"title": "CSS",
 					"size": json.metrics.cssSize,
