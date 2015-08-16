@@ -15,14 +15,15 @@ var simplehar = require("simplehar");
 var del = require("del");
 var connect = require("gulp-connect");
 var open = require("gulp-open");
+var fs = require("fs");
 //var proxy = "http://10.144.1.10:8080";
 //var url = "http://9d5caf3.ngrok.com/traffica-insights.html#!/";
 //var url = "http://localhost:3000/traffica-insights.html#!/";
 var url = "http://ramanathanmuthuraman.github.io/React-Duck2Go/";
 var perfomanceSourceFiles = "./app/source/";
 var perfomanceResults = "./app/results/";
-var d3ResultFilePath = perfomanceResults + "/index.html";
-var perfomanceDataFilePath = perfomanceResults + "/perfomanceData.json";
+var d3ResultFilePath = perfomanceResults + "index.html";
+var perfomanceDataFilePath = perfomanceResults + "perfomanceData.json";
 var pages =[{
 	title: "React-DuckDuckGo",
 	url: "",
@@ -43,7 +44,11 @@ var pages =[{
 		}];*/
 gulp.task("copy", function() {
 
-gulp.src(perfomanceSourceFiles + "*")
+	if (!fs.existsSync(perfomanceResults)){
+    fs.mkdirSync(perfomanceResults);
+}
+
+gulp.src(perfomanceSourceFiles + "**")
 		.pipe(gulp.dest(perfomanceResults));
 });
 gulp.task("phantomas", function() {
@@ -149,7 +154,8 @@ gulp.task("default", ["phantomas"]);
 
 gulp.task('browser-sync', function() {
  browserSync({
-    proxy: config.HOSTNAME + ":" + config.PORT,
+   // proxy: config.HOSTNAME + ":" + config.PORT,
+    server:perfomanceResults,
     ghostMode: false
   });
   
