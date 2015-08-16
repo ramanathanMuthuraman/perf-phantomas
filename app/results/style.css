@@ -1,0 +1,156 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+.resourceTiming {
+    width: 99%;
+    height: 750px;
+}
+.screenshot {
+    width: 100%;
+}
+.tooltip {
+    background: #eee;
+    color: #333;
+    display: none;
+    font-size: 12px;
+    padding: 10px;
+    position: absolute;
+    text-align: center;
+    z-index: 10;
+    border: 1px solid #d8d8d8;
+    border-radius: 5px;
+
+}
+.tooltip:before {
+	border:20px solid transparent;
+	border-bottom-color: #eee;
+	top:-38px;
+	left: 50%;
+	position: absolute;
+	content:"";
+	z-index: 12;
+
+
+}
+.tooltip:after {
+
+	top:-40px;
+	left: 50%;
+	border:20px solid transparent;
+	border-bottom-color: #d8d8d8;
+	position: absolute;
+	content:"";
+	z-index: 11;
+}
+.pie-chart{
+	float: left;
+	display: block;
+}
+.screenshot{
+	width: 50%;
+	display: block;
+	margin: 0 auto;
+}
+.title{
+	text-align: center;
+}
+.stats-table{
+    float: left;
+    border-collapse:collapse;
+}
+
+.stats-table tr{
+
+	border-bottom-width:5px;
+	border-style: solid;
+	border-color: transparent;
+    transition: border 0.3s ease-in-out;
+}
+.stats-table tr:last-child{
+	border:none;
+}
+.stats-table td{
+	padding-right: 0px;
+	padding-left: 200px;
+	padding-top: 40px;
+	text-align: right;
+}
+.stats-table td:first-child{
+	padding-right: 200px;
+	padding-left: 0px;
+	text-align: left;
+}
+.stats-table .header,.stats-table .footer{
+	font-weight: bold;
+}
+
+.stats-table tr.css{
+	border-bottom-width: 5px;
+	border-bottom-color:#1F77B4;
+	color:#1F77B4;
+	font-weight: bold;
+}
+.stats-table tr.js{
+	border-bottom-width: 5px;
+	border-bottom-color:#AEC7E8;
+	color:#AEC7E8;
+	font-weight: bold;
+}
+.stats-table tr.images{
+	border-bottom-width: 5px;
+	border-bottom-color:#AEC7E8;
+	color:#AEC7E8;
+	font-weight: bold;
+}
+.stats-table tr.fonts{
+	border-bottom-width: 5px;
+	border-bottom-color:#FFBB78;
+	color:#FFBB78;
+	font-weight: bold;
+}
+.stats-table tr.others{
+	border-bottom-width: 5px;
+	border-bottom-color:#2CA02C;
+	color:#2CA02C;
+	font-weight: bold;
+}
+.section{
+	width:100%;
+	height:100%;
+}
+.nav{
+	position: fixed;
+	width: 80px;
+	right: 0;
+}
+.prev{
+position: relative;
+margin-bottom: 80px;
+}
+.prev::after{
+	content: " ";
+	position: absolute;
+	border: 40px solid transparent;
+	border-bottom-color: #eee;
+
+}
+.current{
+	position: relative;
+    text-align: center;
+    font-size: 18px;
+}
+
+.next{
+	position: relative;
+
+
+}
+.next::after{
+
+	content:" ";
+	position: absolute;
+	border:40px solid transparent;
+	border-top-color: #eee;
+
+}
