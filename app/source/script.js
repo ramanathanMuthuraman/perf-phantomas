@@ -2,7 +2,6 @@
 
 function generateChart(fileType, chart) {
 
-
   var width = 450;
   var height = 450;
   var radius = Math.min(width, height) / 2;
@@ -10,10 +9,11 @@ function generateChart(fileType, chart) {
   var legendRectSize = 18;
   var legendSpacing = 4;
   var svg = d3.select(chart)
+    .append("div")
+    .attr("class", "pie-chart right")
     .append("svg")
     .attr("width", width)
     .attr("height", height)
-    .attr("class", "pie-chart left")
     .append("g")
     .attr("transform", "translate(" + radius + "," + radius + ")");
 
@@ -61,7 +61,8 @@ function generateChart(fileType, chart) {
     tooltip.select(".label")
       .html(d.data.title);
     tooltip.select(".count")
-      .html(" ("+(d.data.size/ 1000000).toFixed(2)+" MB)");
+      .html(" (" + (d.data.size / 1000000)
+        .toFixed(2) + " MB)");
     tooltip.select(".percent")
       .html("<pre>" + d.data.files.join("\n") + "</pre>");
     tooltip.style("display", "block");
@@ -103,62 +104,63 @@ function generateChart(fileType, chart) {
       return d;
     });
 }
-function generateScreenshot(filename,el){
 
-    d3.select(el)
+function generateScreenshot(filename, el) {
+
+  d3.select(el)
     .append("h1")
     .attr("class", "title center")
     .html(filename);
   d3.select(el)
+    .append("div")
+    .attr("class", "screenshot right")
     .append("img")
     .attr("src", filename + ".jpg")
-    .attr("class", "screenshot clear");
+    .attr("class");
 
 }
+
 function generateStats(stats, el) {
 
   var html = "";
   for (var j = 0; j < stats.length; j++) {
     var filepath = stats[j].info[0].split(" ")[0];
-    var filename = filepath.substr((filepath).lastIndexOf("/")+1);
-    if(!filename.length){
-      filename = "index.html";
-    }
-    html+="<div class='metrics'>";
-    html+="<p class='title center'>"+stats[j].title+"</p>";
-    html+="<p class='center'><span>"+filename+"</span>";
-    html+="<span> in "+stats[j].time+" ms </span></p>";    
-    html+="</div>";
+
+    html += "<div class='metrics'>";
+    html += "<p class='title center'>" + stats[j].title + "</p>";
+    html += "<p class='center'><span class='break'>" + filepath + "</span>";
+    html += "<span> in " + stats[j].time + " ms </span></p>";
+    html += "</div>";
   }
-  d3.select(el).append("div").attr("class","dashboard left").html(html);
-
-
+  d3.select(el)
+    .append("div")
+    .attr("class", "dashboard left")
+    .html(html);
 
 }
 
 function generateTable(fileType, el) {
 
-
   var html = "";
   var total = 0;
-/*  html += "<tr class='header'>";
-  html += "<td>File Type</td>";
-  html += "<td>Size(MB)</td>";
-  html += "</tr>";*/
+  /*  html += "<tr class='header'>";
+    html += "<td>File Type</td>";
+    html += "<td>Size(MB)</td>";
+    html += "</tr>";*/
   html += "<div class='time-stats left'>";
   for (var j = 0; j < fileType.length; j++) {
     var convertToMB = (fileType[j].size / 1000000)
       .toFixed(2);
     total += parseFloat(convertToMB);
-    html += "<p data-filetype=" + fileType[j].title.toLowerCase() + " class='fileType metrics'>";
-    html += "<p class='filename left'>" + fileType[j].title + "</p>";
-    html += "<p class='filesize right'>" + convertToMB + "</p>";
-    html += "</p>";
+    html += "<div data-filetype=" + fileType[j].title.toLowerCase() + " class='fileType metrics'>";
+    html += "<p class='title center'>" + fileType[j].title + "</p>";
+    html += "<p class='center'>" + convertToMB + "</p>";
+    html += "</div>";
   }
-  html += "<p class='footer metrics'>";
-  html += "<span>Total</span>";
-  html += "<span>" + total.toFixed(2) + "</span>";
-  html += "</p>";
+  html += "<div class='footer metrics'>";
+  html += "<p class='title center'>Total</p>";
+  html += "<p class='center'>" + total.toFixed(2) + "</p>";
+  html += "</div>";
   html += "</div>";
   var table = d3.select(el)
     .append("div")
@@ -169,10 +171,11 @@ function generateTable(fileType, el) {
     .on("mousemove", function() {
       var el = d3.select(this);
       el.classed(el.attr("data-filetype"), true);
-      }).on("mouseout", function() {
+    })
+    .on("mouseout", function() {
       var el = d3.select(this);
       el.classed(el.attr("data-filetype"), false);
-  });;
+    });;
 }
 
 function generateResourceTiming(filename, el) {
@@ -184,43 +187,50 @@ function generateResourceTiming(filename, el) {
 
 }
 
-function fetchData(){
-d3.json("perfomanceData.json", function(error, pages) {
+function fetchData() {
+  d3.json("perfomanceData.json", function(error, pages) {
 
-  if (error) {
-    return console.warn(error);
-  }
-  for (var i = 0; i < pages.length; i++) {
-    d3.select("body")
-      .append("div")
-      .attr("class", "page");
-    var page = d3.selectAll(".page")[0][i];
-      var stats = d3.select(page).append("div")
-      .attr("class","section");
-      var chart =  d3.select(page).append("div")
-      .attr("class","section");
-      var resourcePanel = d3.select(page).append("div")
-      .attr("class","section");
-    generateScreenshot(pages[i].title, stats[0][0]);
-    generateStats(pages[i].stats, stats[0][0]);
-    generateTable(pages[i].fileType, chart[0][0]);
-    generateChart(pages[i].fileType, chart[0][0]);
-    generateResourceTiming(pages[i].title, resourcePanel[0][0]);
+    if (error) {
+      return console.warn(error);
+    }
+    for (var i = 0; i < pages.length; i++) {
+      d3.select("body")
+        .append("div")
+        .attr("class", "page");
+      var page = d3.selectAll(".page")[0][i];
+      var stats = d3.select(page)
+        .append("div")
+        .attr("class", "section clear");
+      var chart = d3.select(page)
+        .append("div")
+        .attr("class", "section clear");
+      var resourcePanel = d3.select(page)
+        .append("div")
+        .attr("class", "section clear");
+      generateScreenshot(pages[i].title, stats[0][0]);
+      generateStats(pages[i].stats, stats[0][0]);
+      generateTable(pages[i].fileType, chart[0][0]);
+      generateChart(pages[i].fileType, chart[0][0]);
+      generateResourceTiming(pages[i].title, resourcePanel[0][0]);
 
-  }
+    }
 
-});
+  });
 
 }
 
-function generateNavigation(){
+function generateNavigation() {
   d3.select("#container")
-      .append("div")
-      .attr("class", "nav");
+    .append("div")
+    .attr("class", "nav");
   var nav = d3.select(".nav")
-  nav.append("div").attr("class","prev")
-  nav.append("div").attr("class","current center").html("0")
-  nav.append("div").attr("class","next");
+  nav.append("div")
+    .attr("class", "prev")
+  nav.append("div")
+    .attr("class", "current center")
+    .html("0")
+  nav.append("div")
+    .attr("class", "next");
 
 }
 

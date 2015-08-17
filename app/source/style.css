@@ -6,9 +6,7 @@
     width: 99%;
     height: 750px;
 }
-.screenshot {
-    width: 100%;
-}
+
 .tooltip {
     background: #eee;
     color: #333;
@@ -33,6 +31,9 @@
 
 
 }
+.break{
+	word-wrap:break-word;
+}
 .tooltip:after {
 
 	top:-40px;
@@ -44,11 +45,19 @@
 	z-index: 11;
 }
 .pie-chart{
-	float: left;
+	display: block;
+	width: 60%;
+}
+.pie-chart svg{
+	margin: 0 auto;
 	display: block;
 }
 .screenshot{
 	width: 70%;
+
+}
+.screenshot img{
+	width: 100%;
 
 }
 .left{
@@ -71,7 +80,7 @@
     border-collapse:collapse;
 }
 .metrics{
-	width:40%;
+
 	background: #ccc;
 	margin: 10px 20px;
 	padding: 10px 20px;
@@ -80,16 +89,16 @@
 	width: 30%;
 }
 .time-stats{
-	width: 40%;
+	width: 30%;
 }
-.stats-table tr{
+{
 
 	border-bottom-width:5px;
 	border-style: solid;
 	border-color: transparent;
     transition: border 0.3s ease-in-out;
 }
-.stats-table tr:last-child{
+:last-child{
 	border:none;
 }
 .stats-table td{
@@ -113,34 +122,29 @@
 .text-right{
 	text-align: right;
 }
-.stats-table tr.css{
-	border-bottom-width: 5px;
-	border-bottom-color:#1F77B4;
-	color:#1F77B4;
+.css{
+
+	background:#1F77B4;
 	font-weight: bold;
 }
-.stats-table tr.js{
-	border-bottom-width: 5px;
-	border-bottom-color:#AEC7E8;
-	color:#AEC7E8;
+.js{
+
+	background:#AEC7E8;
+	font-webackgroundight: bold;
+}
+.images{
+
+	background:#AEC7E8;
 	font-weight: bold;
 }
-.stats-table tr.images{
-	border-bottom-width: 5px;
-	border-bottom-color:#AEC7E8;
-	color:#AEC7E8;
+.fonts{
+
+	background:#FFBB78;
 	font-weight: bold;
 }
-.stats-table tr.fonts{
-	border-bottom-width: 5px;
-	border-bottom-color:#FFBB78;
-	color:#FFBB78;
-	font-weight: bold;
-}
-.stats-table tr.others{
-	border-bottom-width: 5px;
-	border-bottom-color:#2CA02C;
-	color:#2CA02C;
+.others{
+
+	background:#2CA02C;
 	font-weight: bold;
 }
 .section{
