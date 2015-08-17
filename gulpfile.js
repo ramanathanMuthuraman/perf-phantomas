@@ -176,7 +176,7 @@ gulp.task("clean", function() {
 });
 
 gulp.task("reload", function () {
-  gulp.src(perfomanceSourceFiles+"*")
+  gulp.src(perfomanceResults+"*")
     .pipe(reload({stream: true}));
 });
 
