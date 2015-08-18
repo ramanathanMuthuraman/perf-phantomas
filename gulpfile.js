@@ -52,7 +52,7 @@ gulp.task("copy", function() {
 	gulp.src(perfomanceSourceFiles + "**")
 		.pipe(gulp.dest(perfomanceResults));
 });
-gulp.task("phantomas", function() {
+gulp.task("phantomas", function(cb) {
 	var metrics = [];
 	var config = {
 		reporter: "json"
@@ -60,7 +60,7 @@ gulp.task("phantomas", function() {
 
 	fs.writeFileSync(d3ResultFilePath, "");
 	fs.writeFileSync(perfomanceDataFilePath, "");
-return	async.eachSeries(pages, function(page, callback) {
+	async.eachSeries(pages, function(page, callback) {
 
 	return	phantomas(url + page.url, {
 			"screenshot": perfomanceResults + page.title + ".jpg",
@@ -75,7 +75,7 @@ return	async.eachSeries(pages, function(page, callback) {
 				console.log(err);
 				return;
 			}
-			fs.writeFileSync(perfomanceResults + "test.json", JSON.stringify(json));
+			//fs.writeFile(perfomanceResults + "test.json", JSON.stringify(json));
 			simplehar({
 				har: perfomanceResults + page.title + ".har",
 				html: perfomanceResults + page.title + ".html"
@@ -142,6 +142,10 @@ return	async.eachSeries(pages, function(page, callback) {
 		});
 	}, function() {
 		fs.appendFileSync(perfomanceDataFilePath, JSON.stringify(metrics));
+		gulp.start("copy")
+		cb(null);
+		
+
 	});
 });
 
@@ -214,22 +218,18 @@ gulp.task('browser-sync', function() {
 });
 
 gulp.task('pm2', function() {
-/*	pm2.connect(function() {
-	  pm2.start({
-	  	name: "server1",
-    	script: 'server.js'
-	  });
-	});*/
 	pm2.connect(function() {
 		pm2.start("server.js", "server");
 	});
 });
 
-gulp.task("dev", function() {
-	runSequence('phantomas','copy', 'browser-sync', 'watch');
+gulp.task("dev",  ["phantomas"],  function(cb) {
+	runSequence('phantomas', 'browser-sync', 'watch');
 });
-gulp.task("build", function() {
-	runSequence('phantomas','copy', 'pm2');
+gulp.task("build", ["phantomas"], function(cb) {
+	cb(startServer("pm2"));
 });
-
+function startServer(type){
+	gulp.start(type);
+}
 gulp.task("default", ["dev"]);
