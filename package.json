@@ -30,7 +30,9 @@
     "gulp": "^3.9.0",
     "ngrok": "0.1.99",
     "phantomas": "^1.11.0",
+    "pm2": "^0.14.7",
     "psi": "^1.0.6",
+    "run-sequence": "^1.1.2",
     "simplehar": "^0.19.0",
     "tableify": "0.0.10",
     "yslowjs": "^0.3.2"

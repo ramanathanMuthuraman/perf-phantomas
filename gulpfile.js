@@ -7,14 +7,16 @@ var fs = require("fs");
 var async = require("async");
 var YSlow = require("yslowjs");
 var ngrok = require("ngrok");
-var browserSync  = require('browser-sync');
-var reload      = browserSync.reload;
-var config = require('./config')
+var browserSync = require('browser-sync');
+var reload = browserSync.reload;
+var config = require('./config');
 var psi = require("psi");
 var simplehar = require("simplehar");
 var del = require("del");
 var fs = require("fs");
 var server = require("./server");
+var pm2 = require('pm2');
+var runSequence = require('run-sequence');
 //var proxy = "http://10.144.1.10:8080";
 //var url = "http://9d5caf3.ngrok.com/traffica-insights.html#!/";
 //var url = "http://localhost:3000/traffica-insights.html#!/";
@@ -23,7 +25,7 @@ var perfomanceSourceFiles = "./public/source/";
 var perfomanceResults = "./build/";
 var d3ResultFilePath = perfomanceResults + "index.html";
 var perfomanceDataFilePath = perfomanceResults + "perfomanceData.json";
-var pages =[{
+var pages = [{
 	title: "React-DuckDuckGo",
 	url: "",
 	selector: "body"
@@ -43,11 +45,11 @@ var pages =[{
 		}];*/
 gulp.task("copy", function() {
 
-	if (!fs.existsSync(perfomanceResults)){
-    fs.mkdirSync(perfomanceResults);
-}
+	if (!fs.existsSync(perfomanceResults)) {
+		fs.mkdirSync(perfomanceResults);
+	}
 
-gulp.src(perfomanceSourceFiles + "**")
+	gulp.src(perfomanceSourceFiles + "**")
 		.pipe(gulp.dest(perfomanceResults));
 });
 gulp.task("phantomas", function() {
@@ -69,7 +71,12 @@ gulp.task("phantomas", function() {
 			//"proxy":proxy,
 			"reporter": config.reporter
 		}, function(err, json) {
-			fs.writeFileSync(perfomanceResults+"test.json", JSON.stringify(json));
+
+			if(err){
+				console.log(err);
+				return;
+			}
+			fs.writeFileSync(perfomanceResults + "test.json", JSON.stringify(json));
 			simplehar({
 				har: perfomanceResults + page.title + ".har",
 				html: perfomanceResults + page.title + ".html"
@@ -77,38 +84,38 @@ gulp.task("phantomas", function() {
 
 			metrics.push({
 				"title": page.title,
-				"stats" : [{
-					"title":"Time To First CSS",
-					"time":json.metrics.timeToFirstCss,
-					"info":json.offenders.timeToFirstCss
-				},{
-					"title":"Time To First JS",
-					"time":json.metrics.timeToFirstJs,
-					"info":json.offenders.timeToFirstJs
-				},{
-					"title":"Smallest Response",
-					"time":json.metrics.smallestResponse,
-					"info":json.offenders.smallestResponse
-				},{
-					"title":"Biggest Response",
-					"time":json.metrics.biggestResponse,
-					"info":json.offenders.biggestResponse
-				},{
-					"title":"Fastest Response",
-					"time":json.metrics.fastestResponse,
-					"info":json.offenders.fastestResponse
-				},{
-					"title":"Slowest Response",
-					"time":json.metrics.slowestResponse,
-					"info":json.offenders.slowestResponse
-				},{
-					"title":"Smallest Latency",
-					"time":json.metrics.smallestLatency,
-					"info":json.offenders.smallestLatency
-				},{
-					"title":"Biggest Latency",
-					"time":json.metrics.biggestLatency,
-					"info":json.offenders.biggestLatency
+				"stats": [{
+					"title": "Time To First CSS",
+					"time": json.metrics.timeToFirstCss,
+					"info": json.offenders.timeToFirstCss
+				}, {
+					"title": "Time To First JS",
+					"time": json.metrics.timeToFirstJs,
+					"info": json.offenders.timeToFirstJs
+				}, {
+					"title": "Smallest Response",
+					"time": json.metrics.smallestResponse,
+					"info": json.offenders.smallestResponse
+				}, {
+					"title": "Biggest Response",
+					"time": json.metrics.biggestResponse,
+					"info": json.offenders.biggestResponse
+				}, {
+					"title": "Fastest Response",
+					"time": json.metrics.fastestResponse,
+					"info": json.offenders.fastestResponse
+				}, {
+					"title": "Slowest Response",
+					"time": json.metrics.slowestResponse,
+					"info": json.offenders.slowestResponse
+				}, {
+					"title": "Smallest Latency",
+					"time": json.metrics.smallestLatency,
+					"info": json.offenders.smallestLatency
+				}, {
+					"title": "Biggest Latency",
+					"time": json.metrics.biggestLatency,
+					"info": json.offenders.biggestLatency
 				}],
 				"fileType": [{
 					"title": "CSS",
@@ -136,8 +143,8 @@ gulp.task("phantomas", function() {
 		});
 	}, function() {
 		fs.appendFileSync(perfomanceDataFilePath, JSON.stringify(metrics));
-		gulp.start("browser-sync");
-		gulp.start("watch");
+		//gulp.start("browser-sync");
+		//gulp.start("watch");
 	});
 });
 
@@ -146,7 +153,11 @@ gulp.task("yslow", function() {
 	fs.writeFileSync(yslowResultFilePath);
 	async.eachSeries(pages, function(page, callback) {
 		var yslow = new YSlow(url + page.url, ["--info", "grade"]);
-		yslow.run(function(error, data) {
+		yslow.run(function(err, data) {
+			if(err){
+				console.log(err);
+				return;
+			}
 			fs.appendFileSync(yslowResultFilePath, decodeURIComponent(tableify(data)));
 			callback(null, data);
 		});
@@ -157,11 +168,19 @@ gulp.task("psi", function() {
 	var googlePageSpeedInsightsResultFilePath = perfomanceResults + "/psi.html";
 	fs.writeFileSync(googlePageSpeedInsightsResultFilePath);
 	ngrok.connect(3000, function(err, ngrokurl) {
+		if(err){
+				console.log(err);
+				return;
+			}
 		async.eachSeries(pages, function(page, callback) {
 			psi(ngrokurl + "/traffica-insights.html#!/" + page.url, {
 				nokey: "true",
 				strategy: "desktop",
-			}, function(error, data) {
+			}, function(err, data) {
+				if(err){
+				console.log(err);
+					return;
+				}
 				fs.appendFileSync(googlePageSpeedInsightsResultFilePath, tableify(data));
 				callback(null, data);
 			});
@@ -174,28 +193,46 @@ gulp.task("clean", function() {
 	del(perfomanceResults + "**/*");
 });
 
-gulp.task("reload", function () {
-  gulp.src(perfomanceResults+"*")
-    .pipe(reload({stream: true}));
+gulp.task("reload", function() {
+	gulp.src(perfomanceResults + "*")
+		.pipe(reload({
+			stream: true
+		}));
 });
 
-gulp.task("watch", function () {
-  gulp.watch([perfomanceSourceFiles+"**/*"], ["copy","reload"]);
+gulp.task("watch", function() {
+	gulp.watch([perfomanceSourceFiles + "**/*"], ["copy", "reload"]);
 });
 
-gulp.task("default", ["phantomas"]);
 
 gulp.task('browser-sync', function() {
-	server.listen(config.PORT,function(){
-		 browserSync({
-		    proxy: config.HOSTNAME + ":" + config.PORT,
-		     files: [perfomanceResults+'/*'],
-		   // server:perfomanceResults,
-		    ghostMode: false
-		  });
+
+	browserSync({
+		proxy: config.HOSTNAME + ":" + config.PORT,
+		files: [perfomanceResults + '/*'],
+		// server:perfomanceResults,
+		ghostMode: false
+	});
+
+});
+
+gulp.task('pm2', function() {
+/*	pm2.connect(function() {
+	  pm2.start({
+	  	name: "server1",
+    	script: 'server.js'
+	  });
+	});*/
+	pm2.connect(function() {
+		pm2.start("server.js", "server");
 	});
 });
 
+gulp.task("dev", function() {
+	runSequence('phantomas', 'browser-sync', 'watch');
+});
+gulp.task("build", function() {
+	runSequence('phantomas', 'pm2');
+});
 
-
-
+gulp.task("default", ["dev"]);
