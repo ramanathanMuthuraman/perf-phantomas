@@ -13,15 +13,14 @@ var config = require('./config')
 var psi = require("psi");
 var simplehar = require("simplehar");
 var del = require("del");
-var connect = require("gulp-connect");
-var open = require("gulp-open");
 var fs = require("fs");
+var server = require("./server");
 //var proxy = "http://10.144.1.10:8080";
 //var url = "http://9d5caf3.ngrok.com/traffica-insights.html#!/";
 //var url = "http://localhost:3000/traffica-insights.html#!/";
 var url = "http://ramanathanmuthuraman.github.io/React-Duck2Go/";
-var perfomanceSourceFiles = "./app/source/";
-var perfomanceResults = "./app/results/";
+var perfomanceSourceFiles = "./public/source/";
+var perfomanceResults = "./build/";
 var d3ResultFilePath = perfomanceResults + "index.html";
 var perfomanceDataFilePath = perfomanceResults + "perfomanceData.json";
 var pages =[{
@@ -187,17 +186,16 @@ gulp.task("watch", function () {
 gulp.task("default", ["phantomas"]);
 
 gulp.task('browser-sync', function() {
- browserSync({
-   // proxy: config.HOSTNAME + ":" + config.PORT,
-    server:perfomanceResults,
-    ghostMode: false
-  });
-  
+	server.listen(config.PORT,function(){
+		 browserSync({
+		    proxy: config.HOSTNAME + ":" + config.PORT,
+		     files: [perfomanceResults+'/*'],
+		   // server:perfomanceResults,
+		    ghostMode: false
+		  });
+	});
 });
 
-gulp.task("open", function(){
-  gulp.src("")
-  .pipe(open({uri: "http://localhost:9999"}));
-});
+
 
 

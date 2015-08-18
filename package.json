@@ -28,13 +28,14 @@
     "browser-sync": "^2.8.2",
     "del": "1.1.1",
     "gulp": "^3.9.0",
-    "gulp-connect": "^2.2.0",
-    "gulp-open": "^1.0.0",
     "ngrok": "0.1.99",
     "phantomas": "^1.11.0",
     "psi": "^1.0.6",
     "simplehar": "^0.19.0",
     "tableify": "0.0.10",
     "yslowjs": "^0.3.2"
+  },
+  "dependencies": {
+    "express": "^4.13.3"
   }
 }
