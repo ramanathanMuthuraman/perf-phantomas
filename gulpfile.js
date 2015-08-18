@@ -54,16 +54,15 @@ gulp.task("copy", function() {
 });
 gulp.task("phantomas", function() {
 	var metrics = [];
-	gulp.start("copy");
 	var config = {
 		reporter: "json"
 	};
 
 	fs.writeFileSync(d3ResultFilePath, "");
 	fs.writeFileSync(perfomanceDataFilePath, "");
-	async.eachSeries(pages, function(page, callback) {
+return	async.eachSeries(pages, function(page, callback) {
 
-		phantomas(url + page.url, {
+	return	phantomas(url + page.url, {
 			"screenshot": perfomanceResults + page.title + ".jpg",
 			"wait-for-selector": page.selector,
 			"timeout": 100,
@@ -143,8 +142,6 @@ gulp.task("phantomas", function() {
 		});
 	}, function() {
 		fs.appendFileSync(perfomanceDataFilePath, JSON.stringify(metrics));
-		//gulp.start("browser-sync");
-		//gulp.start("watch");
 	});
 });
 
@@ -229,10 +226,10 @@ gulp.task('pm2', function() {
 });
 
 gulp.task("dev", function() {
-	runSequence('phantomas', 'browser-sync', 'watch');
+	runSequence('phantomas','copy', 'browser-sync', 'watch');
 });
 gulp.task("build", function() {
-	runSequence('phantomas', 'pm2');
+	runSequence('phantomas','copy', 'pm2');
 });
 
 gulp.task("default", ["dev"]);
