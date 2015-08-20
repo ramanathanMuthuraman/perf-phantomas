@@ -2,9 +2,10 @@
 	margin: 0;
 	padding: 0;
 }
+
 .resourceTiming {
     width: 99%;
-    height: 750px;
+    height: 600px;
 }
 
 .tooltip {
@@ -32,7 +33,11 @@
 
 }
 .break{
-	word-wrap:break-word;
+	white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    cursor: pointer;
 }
 .tooltip:after {
 
@@ -53,8 +58,11 @@
 	display: block;
 }
 .screenshot{
-	width: 70%;
+	width: 50%;
 
+}
+.section-header{
+	padding: 10px;
 }
 .screenshot img{
 	width: 100%;
@@ -86,34 +94,14 @@
 	padding: 10px 20px;
 }
 .dashboard{
-	width: 30%;
+	width: 50%;
+}
+.dashboard .metrics{
+	width: 35%;
+	height:55px;
 }
 .time-stats{
 	width: 30%;
-}
-{
-
-	border-bottom-width:5px;
-	border-style: solid;
-	border-color: transparent;
-    transition: border 0.3s ease-in-out;
-}
-:last-child{
-	border:none;
-}
-.stats-table td{
-	padding-right: 0px;
-	padding-left: 200px;
-	padding-top: 40px;
-	text-align: right;
-}
-.stats-table td:first-child{
-	padding-right: 200px;
-	padding-left: 0px;
-	text-align: left;
-}
-.stats-table .header,.stats-table .footer{
-	font-weight: bold;
 }
 
 .text-left{
@@ -155,6 +143,7 @@
 	position: fixed;
 	width: 80px;
 	right: 0;
+	top: 0;
 }
 .prev{
 position: relative;

@@ -83,38 +83,76 @@ gulp.task("phantomas", function(cb) {
 
 			metrics.push({
 				"title": page.title,
-				"stats": [{
-					"title": "Time To First CSS",
-					"time": json.metrics.timeToFirstCss,
-					"info": json.offenders.timeToFirstCss
-				}, {
-					"title": "Time To First JS",
-					"time": json.metrics.timeToFirstJs,
-					"info": json.offenders.timeToFirstJs
-				}, {
-					"title": "Smallest Response",
-					"time": json.metrics.smallestResponse,
-					"info": json.offenders.smallestResponse
-				}, {
-					"title": "Biggest Response",
-					"time": json.metrics.biggestResponse,
-					"info": json.offenders.biggestResponse
-				}, {
-					"title": "Fastest Response",
-					"time": json.metrics.fastestResponse,
-					"info": json.offenders.fastestResponse
-				}, {
-					"title": "Slowest Response",
-					"time": json.metrics.slowestResponse,
-					"info": json.offenders.slowestResponse
-				}, {
-					"title": "Smallest Latency",
-					"time": json.metrics.smallestLatency,
-					"info": json.offenders.smallestLatency
-				}, {
-					"title": "Biggest Latency",
-					"time": json.metrics.biggestLatency,
-					"info": json.offenders.biggestLatency
+				"stats" : [{
+					"title":"DOM Content loaded",
+					"time":json.metrics.domInteractive+json.metrics.domComplete,
+					"units" : "ms",
+					"info":""
+				},{
+					"title":"DOM elements count",
+					"time":json.metrics.DOMelementsCount,
+					"units" : "elements",
+					"info":""
+				},{
+					"title":"Time To First CSS",
+					"time":json.metrics.timeToFirstCss,
+					"units" : "ms",
+					"info":json.offenders.timeToFirstCss
+				},{
+					"title":"Time To First JS",
+					"time":json.metrics.timeToFirstJs,
+					"units" : "ms",
+					"info":json.offenders.timeToFirstJs
+				},{
+					"title":"Smallest Response",
+					"time":json.metrics.smallestResponse,
+					"units" : "bytes",
+					"info":json.offenders.smallestResponse
+				},{
+					"title":"Biggest Response",
+					"time":json.metrics.biggestResponse,
+					"units" : "bytes",
+					"info":json.offenders.biggestResponse
+				},{
+					"title":"Fastest Response",
+					"time":json.metrics.fastestResponse,
+					"units" : "ms",
+					"info":json.offenders.fastestResponse
+				},{
+					"title":"Slowest Response",
+					"time":json.metrics.slowestResponse,
+					"units" : "ms",
+					"info":json.offenders.slowestResponse
+				},{
+					"title":"Smallest Latency",
+					"time":json.metrics.smallestLatency,
+					"units" : "ms",
+					"info":json.offenders.smallestLatency
+				},{
+					"title":"Biggest Latency",
+					"time":json.metrics.biggestLatency,
+					"units" : "ms",
+					"info":json.offenders.biggestLatency
+				},{
+					"title":"Time Backend",
+					"time":json.metrics.timeBackend,
+					"units" : "%",
+					"info": ""
+				},{
+					"title":"Time Frontend",
+					"time":json.metrics.timeFrontend,
+					"units" : "%",
+					"info":""
+				},{
+					"title":"Caching Disabled",
+					"time":json.metrics.cachingDisabled,
+					"units" : "files",
+					"info": json.offenders.cachingDisabled
+				},{
+					"title":"Assets Not Gzipped",
+					"time":json.metrics.assetsNotGzipped,
+					"units" : "files",
+					"info":json.offenders.assetsNotGzipped
 				}],
 				"fileType": [{
 					"title": "CSS",

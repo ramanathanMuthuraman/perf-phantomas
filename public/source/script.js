@@ -105,12 +105,18 @@ function generateChart(fileType, chart) {
     });
 }
 
-function generateScreenshot(filename, el) {
+function generateHeader(filename, el) {
 
   d3.select(el)
     .append("h1")
-    .attr("class", "title center")
+    .attr("class", "title center section-header")
     .html(filename);
+
+}
+
+function generateScreenshot(filename, el) {
+
+  generateHeader(filename + "-Statistics", el);
   d3.select(el)
     .append("div")
     .attr("class", "screenshot right")
@@ -124,12 +130,15 @@ function generateStats(stats, el) {
 
   var html = "";
   for (var j = 0; j < stats.length; j++) {
-    var filepath = stats[j].info[0].split(" ")[0];
+    var info = stats[j].info;
+    if (info instanceof Array) {
+      info = info.join("\n");
+    }
 
-    html += "<div class='metrics'>";
-    html += "<p class='title center'>" + stats[j].title + "</p>";
-    html += "<p class='center'><span class='break'>" + filepath + "</span>";
-    html += "<span> in " + stats[j].time + " ms </span></p>";
+    html += "<div class='metrics left'>";
+    html += "<p class='title left'>" + stats[j].title + "</p>";
+    html += "<p class='title right'>" + stats[j].time + " " + stats[j].units + "</p>";
+    html += "<p class='clear center'><code title='" + info + "' class='break'>" + info + "</code>";
     html += "</div>";
   }
   d3.select(el)
@@ -141,12 +150,9 @@ function generateStats(stats, el) {
 
 function generateTable(fileType, el) {
 
+  generateHeader("Asset Types", el);
   var html = "";
   var total = 0;
-  /*  html += "<tr class='header'>";
-    html += "<td>File Type</td>";
-    html += "<td>Size(MB)</td>";
-    html += "</tr>";*/
   html += "<div class='time-stats left'>";
   for (var j = 0; j < fileType.length; j++) {
     var convertToMB = (fileType[j].size / 1000000)
@@ -179,7 +185,7 @@ function generateTable(fileType, el) {
 }
 
 function generateResourceTiming(filename, el) {
-
+  generateHeader("Resource Panel", el);
   d3.select(el)
     .append("iframe")
     .attr("class", "resourceTiming")
@@ -194,7 +200,7 @@ function fetchData() {
       return console.warn(error);
     }
     for (var i = 0; i < pages.length; i++) {
-      d3.select("body")
+      d3.select("#container")
         .append("div")
         .attr("class", "page");
       var page = d3.selectAll(".page")[0][i];
@@ -220,6 +226,7 @@ function fetchData() {
 }
 
 function generateNavigation() {
+  var height = d3.select('body')[0][0].clientHeight;
   d3.select("#container")
     .append("div")
     .attr("class", "nav");
@@ -231,6 +238,20 @@ function generateNavigation() {
     .html("0")
   nav.append("div")
     .attr("class", "next");
+
+  d3.select(".next")
+    .on("click", function() {
+
+      window.scrollBy(0, height);
+
+    });
+
+  d3.select(".prev")
+    .on("click", function() {
+
+      window.scrollBy(0, -height);
+
+    });
 
 }
 
