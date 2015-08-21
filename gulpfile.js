@@ -23,7 +23,8 @@ var runSequence = require('run-sequence');
 var url = "http://ramanathanmuthuraman.github.io/React-Duck2Go/";
 var perfomanceSourceFiles = "./public/source/";
 var perfomanceResults = "./build/";
-var d3ResultFilePath = perfomanceResults + "index.html";
+
+
 var perfomanceDataFilePath = perfomanceResults + "perfomanceData.json";
 var pages = [{
 	title: "React-DuckDuckGo",
@@ -58,7 +59,7 @@ gulp.task("phantomas", function(cb) {
 		reporter: "json"
 	};
 
-	fs.writeFileSync(d3ResultFilePath, "");
+
 	fs.writeFileSync(perfomanceDataFilePath, "");
 	async.eachSeries(pages, function(page, callback) {
 
@@ -156,23 +157,23 @@ gulp.task("phantomas", function(cb) {
 				}],
 				"fileType": [{
 					"title": "CSS",
-					"size": json.metrics.cssSize,
+					"value": json.metrics.cssSize,
 					"files": json.offenders.cssCount
 				}, {
 					"title": "JS",
-					"size": json.metrics.jsSize,
+					"value": json.metrics.jsSize,
 					"files": json.offenders.jsCount
 				}, {
 					"title": "Images",
-					"size": json.metrics.imageSize,
+					"value": json.metrics.imageSize,
 					"files": json.offenders.imageCount
 				}, {
 					"title": "Fonts",
-					"size": json.metrics.webfontSize,
+					"value": json.metrics.webfontSize,
 					"files": json.offenders.webfontCount
 				}, {
 					"title": "Others",
-					"size": json.metrics.otherSize,
+					"value": json.metrics.otherSize,
 					"files": json.offenders.otherCount
 				}]
 			});

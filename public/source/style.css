@@ -49,11 +49,8 @@
 	content:"";
 	z-index: 11;
 }
-.pie-chart{
-	display: block;
-	width: 60%;
-}
-.pie-chart svg{
+
+.bubble-chart svg{
 	margin: 0 auto;
 	display: block;
 }

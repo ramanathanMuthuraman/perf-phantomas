@@ -1,108 +1,106 @@
 "use strict";
 
-function generateChart(fileType, chart) {
+function generateChart(fileType, el) {
 
-  var width = 450;
-  var height = 450;
-  var radius = Math.min(width, height) / 2;
-  var colour = d3.scale.category20();
-  var legendRectSize = 18;
-  var legendSpacing = 4;
-  var svg = d3.select(chart)
+
+
+  var width = 1000, height=600;
+  var sizeCharacterLength = 8;
+  var fontSizeInPixels = 4;
+  var lineHeight = 20;
+  var color = d3.scale.category20c();
+   var convertToMB = 0;
+   var requests = 0;
+  for (var j = 0; j < fileType.length; j++) {
+     convertToMB += fileType[j].value / 1000000;
+     requests +=  fileType[j].files.length;
+  }
+  generateHeader(convertToMB.toFixed(2) +" MB Transferred in "+requests+" requests", el);
+
+    var json = {
+      "children" : fileType
+    };
+
+
+
+    var bubble = d3.layout.pack()
+    .sort(null)
+    .size([width, height]);
+
+    var svg = d3.select(el)
     .append("div")
-    .attr("class", "pie-chart right")
+    .attr("class", "bubble-chart")
     .append("svg")
     .attr("width", width)
     .attr("height", height)
-    .append("g")
-    .attr("transform", "translate(" + radius + "," + radius + ")");
+    .attr("class", "bubble");
 
-  svg.append("circle")
-    .attr("cx", 0)
-    .attr("cy", 0)
-    .attr("r", 100)
-    .attr("fill", "#FFFFFF");
 
-  // Determine size of arcs
-  var arc = d3.svg.arc()
-    .innerRadius(radius - 50)
-    .outerRadius(radius - 10);
+ var node = svg.selectAll(".node")
+      .data(bubble.nodes(json).filter(function(d) { return !d.children; }))
+      .enter().append("g")
+      .attr("class", "node")
+      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 
-  // Create the donut pie chart layout
-  var pie = d3.layout.pie()
-    .value(function(d) {
-      return d.size;
-    });
+       node.append("circle")
+      .attr("r", function(d) { return d.r; })
+      .style("fill",  function(d) { return color(d.title); });
 
-  var tooltip = d3.select(chart)
-    .append("div")
-    .attr("class", "tooltip");
+       node.append("text")
+       .attr("color","#000")
+       .attr("x", function(d) {
+          return -fontSizeInPixels*(d.title.length);
+        })
+      .text(function(d) {return d.title;});
 
-  tooltip.append("span")
-    .attr("class", "label");
+      node.append("text")
+       .attr("color","#000")
+       .attr("x", function(d) {
+          return -fontSizeInPixels*sizeCharacterLength;
+        })
+       .attr("y", function(d) {
+          return lineHeight;
+        })
+      .text(function(d) {return " (" + (d.value / 1000000).toFixed(2) + " MB)";});
 
-  tooltip.append("span")
-    .attr("class", "count");
+        var tooltip = d3.select(el)
+        .append("div")
+        .attr("class", "tooltip");
 
-  tooltip.append("div")
-    .attr("class", "percent");
+        tooltip.append("span")
+        .attr("class", "label title");
 
-  var path = svg.selectAll("path")
-    .data(pie(fileType))
-    .enter()
-    .append("path")
-    .attr("d", arc)
-    .attr("fill", function(d) {
-      return colour(d.data.title);
-    });
+        tooltip.append("span")
+        .attr("class", "count title");
 
-  path.on("mousemove", function(d) {
+        tooltip.append("div")
+        .attr("class", "percent");
 
-    tooltip.select(".label")
-      .html(d.data.title);
-    tooltip.select(".count")
-      .html(" (" + (d.data.size / 1000000)
-        .toFixed(2) + " MB)");
-    tooltip.select(".percent")
-      .html("<pre>" + d.data.files.join("\n") + "</pre>");
-    tooltip.style("display", "block");
-    tooltip.style("top", d3.event.pageY + 45);
-    tooltip.style("left", d3.event.pageX - 16 - Math.floor(tooltip[0][0].getBoundingClientRect()
-      .width * 0.5));
 
-  });
 
-  path.on("mouseout", function() {
-    tooltip.style("display", "none");
+        node.on("mousemove", function(d) {
 
-  });
+              tooltip.select(".label")
+                .html(d.title);
+              tooltip.select(".count")
+                .html(" (" + (d.value / 1000000)
+                  .toFixed(2) + " MB transferred in "+d.files.length+" request(s))");
+              tooltip.select(".percent")
+                .html("<pre>" + d.files.join("\n") + "</pre>");
+              tooltip.style("display", "block");
+              tooltip.style("top", d3.event.pageY + 45);
+              tooltip.style("left", d3.event.pageX - 16 - Math.floor(tooltip[0][0].getBoundingClientRect()
+                .width * 0.5));
 
-  var legend = svg.selectAll(".legend")
-    .data(colour.domain())
-    .enter()
-    .append("g")
-    .attr("class", "legend")
-    .attr("transform", function(d, i) {
-      var height = legendRectSize + legendSpacing;
-      var offset = height * colour.domain()
-        .length / 2;
-      var horz = -2 * legendRectSize;
-      var vert = i * height - offset;
-      return "translate(" + horz + "," + vert + ")";
-    });
+        });
 
-  legend.append("rect")
-    .attr("width", legendRectSize)
-    .attr("height", legendRectSize)
-    .style("fill", colour)
-    .style("stroke", colour);
+        node.on("mouseout", function(e) {
 
-  legend.append("text")
-    .attr("x", legendRectSize + legendSpacing)
-    .attr("y", legendRectSize - legendSpacing)
-    .text(function(d) {
-      return d;
-    });
+              tooltip.style("display", "none");
+
+
+        });
+
 }
 
 function generateHeader(filename, el) {
@@ -181,7 +179,7 @@ function generateTable(fileType, el) {
     .on("mouseout", function() {
       var el = d3.select(this);
       el.classed(el.attr("data-filetype"), false);
-    });;
+    });
 }
 
 function generateResourceTiming(filename, el) {
@@ -215,45 +213,55 @@ function fetchData() {
         .attr("class", "section clear");
       generateScreenshot(pages[i].title, stats[0][0]);
       generateStats(pages[i].stats, stats[0][0]);
-      generateTable(pages[i].fileType, chart[0][0]);
       generateChart(pages[i].fileType, chart[0][0]);
       generateResourceTiming(pages[i].title, resourcePanel[0][0]);
 
     }
-
+    generateNavigation();
   });
 
 }
 
 function generateNavigation() {
-  var height = d3.select('body')[0][0].clientHeight;
+  var height = d3.select('.section')[0][0].clientHeight;
   d3.select("#container")
     .append("div")
     .attr("class", "nav");
   var nav = d3.select(".nav")
   nav.append("div")
-    .attr("class", "prev")
+    .attr("class", "prev");
   nav.append("div")
     .attr("class", "current center")
-    .html("0")
+    .html("0");
   nav.append("div")
     .attr("class", "next");
 
   d3.select(".next")
     .on("click", function() {
 
-      window.scrollBy(0, height);
+     d3.transition()
+    .duration(1000)
+    .tween("scroll", scrollTween(window.scrollY+height));
 
     });
 
   d3.select(".prev")
     .on("click", function() {
 
-      window.scrollBy(0, -height);
+       d3.transition()
+    .duration(1000)
+    .tween("scroll", scrollTween(window.scrollY-height));
 
     });
 
 }
 
-generateNavigation();
+function scrollTween(offset){
+return function() {
+    var i = d3.interpolateNumber(window.pageYOffset || document.documentElement.scrollTop, offset);
+    return function(t) { scrollTo(0, i(t)); };
+  };
+}
+
+
 fetchData();
