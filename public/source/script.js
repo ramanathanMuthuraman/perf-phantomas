@@ -11,14 +11,18 @@ function generateChart(fileType, el) {
   var color = d3.scale.category20c();
    var convertToMB = 0;
    var requests = 0;
+   var children = [];
   for (var j = 0; j < fileType.length; j++) {
      convertToMB += fileType[j].value / 1000000;
-     requests +=  fileType[j].files.length;
+      if(fileType[j].files){
+       requests +=  fileType[j].files.length;
+       children.push(fileType[j]);
+     }
   }
   generateHeader(convertToMB.toFixed(2) +" MB Transferred in "+requests+" requests", el);
 
     var json = {
-      "children" : fileType
+      "children" : children
     };
 
 
@@ -192,10 +196,10 @@ function generateResourceTiming(filename, el) {
 }
 
 function fetchData() {
-  d3.json("perfomanceData.json", function(error, pages) {
+  d3.json("perfomanceData.json", function(err, pages) {
 
-    if (error) {
-      return console.warn(error);
+    if (err) {
+      return console.warn(err);
     }
     for (var i = 0; i < pages.length; i++) {
       d3.select("#container")
