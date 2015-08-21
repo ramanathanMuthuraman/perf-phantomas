@@ -31,19 +31,7 @@ var pages = [{
 	url: "",
 	selector: "body"
 }];
-/*var pages = [{
-	title: "GeoInsights",
-	url: "tab/1/page/1/",
-	selector: ".coveragemap"
-		}, {
-	title: "SessionSearch",
-	url: "tab/2/page/1/",
-	selector: ".panel-portal"
-		}, {
-	title: "SessionAnalysis",
-	url: "tab/3/page/1/",
-	selector: ".sessionAnalysisContainer"
-		}];*/
+
 gulp.task("copy", function() {
 
 	if (!fs.existsSync(perfomanceResults)) {
