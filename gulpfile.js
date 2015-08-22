@@ -16,7 +16,7 @@ var del = require("del");
 var fs = require("fs");
 var server = require("./server");
 var pm2 = require('pm2');
-var runSequence = require('run-sequence');
+
 //var proxy = "http://10.144.1.10:8080";
 //var url = "http://9d5caf3.ngrok.com/traffica-insights.html#!/";
 //var url = "http://localhost:3000/traffica-insights.html#!/";
@@ -48,7 +48,7 @@ gulp.task("phantomas", function(cb) {
 	};
 
 
-	fs.writeFileSync(perfomanceDataFilePath, "");
+	
 	async.eachSeries(pages, function(page, callback) {
 
 	return	phantomas(url + page.url, {
@@ -168,8 +168,10 @@ gulp.task("phantomas", function(cb) {
 			callback(null, json);
 		});
 	}, function() {
+		
+		gulp.start("copy");
+		fs.writeFileSync(perfomanceDataFilePath, "");
 		fs.appendFileSync(perfomanceDataFilePath, JSON.stringify(metrics));
-		gulp.start("copy")
 		cb(null);
 		
 
@@ -229,7 +231,7 @@ gulp.task("reload", function() {
 });
 
 gulp.task("watch", function() {
-	gulp.watch([perfomanceSourceFiles + "**/*"], ["copy", "reload"]);
+	gulp.watch([perfomanceSourceFiles + "*"], ["copy", "reload"]);
 });
 
 
@@ -251,7 +253,8 @@ gulp.task('pm2', function() {
 });
 
 gulp.task("dev",  ["phantomas"],  function(cb) {
-	runSequence('phantomas', 'browser-sync', 'watch');
+	cb(startServer("browser-sync"));
+	gulp.start('watch');
 });
 gulp.task("build", ["phantomas"], function(cb) {
 	cb(startServer("pm2"));
